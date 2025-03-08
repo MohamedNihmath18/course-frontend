@@ -7,7 +7,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const response = await fetch("http://localhost:5000/api/auth/login-admin", {
+    const response = await fetch("https://course-backend-vf2z.onrender.com/api/auth/login-admin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

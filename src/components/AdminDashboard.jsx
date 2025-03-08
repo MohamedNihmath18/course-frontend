@@ -5,7 +5,7 @@ const AdminDashboard = () => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/admin/students", {
+    fetch("https://course-backend-vf2z.onrender.com/api/admin/students", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
       .then((res) => res.json())
@@ -14,7 +14,7 @@ const AdminDashboard = () => {
   }, []);
 
   const assignGrade = async (studentId, grade) => {
-    await fetch("http://localhost:5000/api/grades/assign-grade", {
+    await fetch("https://course-backend-vf2z.onrender.com/api/grades/assign-grade", {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",

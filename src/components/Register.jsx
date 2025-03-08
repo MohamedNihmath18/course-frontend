@@ -13,7 +13,7 @@ const Register = () => {
     // const endpoint = role === "admin" ? "register-admin" : "register-student";
     const endpoint = "register-student"; // Now it only registers students
 
-    const response = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+    const response = await fetch(`https://course-backend-vf2z.onrender.com/api/auth/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, ...(role === "student" && { course }) }),

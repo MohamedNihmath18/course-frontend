@@ -16,7 +16,7 @@ const StudentPage = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/grades/students-with-grades", {
+      const res = await fetch("https://course-backend-vf2z.onrender.com/api/grades/students-with-grades", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
@@ -40,7 +40,7 @@ const StudentPage = () => {
 
   const downloadCertificate = () => {
     if (!studentData) return;
-    window.open(`http://localhost:5000/api/certificate/generate-certificate/${studentData._id}`, "_blank");
+    window.open(`https://course-backend-vf2z.onrender.com/api/certificate/generate-certificate/${studentData._id}`, "_blank");
   };
 
   return (

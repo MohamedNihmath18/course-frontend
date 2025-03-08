@@ -17,7 +17,7 @@ const AdminPage = () => {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/grades/students-with-grades", {
+        const res = await fetch("https://course-backend-vf2z.onrender.com/api/grades/students-with-grades", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -48,7 +48,7 @@ const AdminPage = () => {
   // ✅ Function to assign grades
   const assignGrade = async (studentId, grade) => {
     try {
-      const res = await fetch("http://localhost:5000/api/grades/assign-grade", {
+      const res = await fetch("https://course-backend-vf2z.onrender.com/api/grades/assign-grade", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

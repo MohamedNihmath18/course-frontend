@@ -10,7 +10,7 @@
 //     const endpoint = role === "admin" ? "login-admin" : "login-student";
 //     localStorage.setItem("userEmail", email);
 
-//     const response = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+//     const response = await fetch(`https://course-backend-vf2z.onrender.com/api/auth/${endpoint}`, {
 //       method: "POST",
 //       headers: { "Content-Type": "application/json" },
 //       body: JSON.stringify({ email, password }),
@@ -48,7 +48,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const response = await fetch("http://localhost:5000/api/auth/login-student", {
+    const response = await fetch("https://course-backend-vf2z.onrender.com/api/auth/login-student", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
