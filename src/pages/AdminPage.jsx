@@ -1,0 +1,122 @@
+import { useEffect, useState } from "react";
+import LogoutButton from "../components/LogoutButton";
+
+const AdminPage = () => {
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setError("Unauthorized access - No token found");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:5000/api/grades/students-with-grades", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Unauthorized - Token invalid or expired. Please log in again.");
+        }
+
+        const data = await res.json();
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data received from server");
+        }
+
+        setStudents(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, []); // ✅ Fetch latest grades when page loads
+
+  // ✅ Function to assign grades
+  const assignGrade = async (studentId, grade) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/grades/assign-grade", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ studentId, grade }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to assign grade");
+      }
+
+      alert(`Grade ${grade} assigned successfully!`);
+
+      // ✅ Update the grade in state without full reload
+      setStudents((prevStudents) =>
+        prevStudents.map((student) =>
+          student._id === studentId ? { ...student, grade } : student
+        )
+      );
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  return (
+    <div className="p-6 min-h-screen bg-gray-100">
+      <LogoutButton />
+      <h2 className="text-2xl font-bold mb-4 text-center">Admin Dashboard</h2>
+      {loading ? (
+        <p className="text-center">Loading students...</p>
+      ) : error ? (
+        <p className="text-center text-red-500">{error}</p>
+      ) : students.length === 0 ? (
+        <p className="text-center text-gray-500">No students found.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border p-2">Name</th>
+                <th className="border p-2">Email</th>
+                <th className="border p-2">Course</th>
+                <th className="border p-2">Grade</th>
+                <th className="border p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <tr key={student._id} className="border">
+                  <td className="p-2">{student.name}</td>
+                  <td className="p-2">{student.email}</td>
+                  <td className="p-2">{student.course}</td>
+                  <td className="p-2">{student.grade || "Not Graded"}</td> 
+                  <td className="p-2">
+                    <button onClick={() => assignGrade(student._id, "A")} className="bg-blue-500 text-white px-3 py-1 rounded">A</button>
+                    <button onClick={() => assignGrade(student._id, "B")} className="bg-green-500 text-white px-3 py-1 rounded ml-2">B</button>
+                    <button onClick={() => assignGrade(student._id, "C")} className="bg-yellow-500 text-white px-3 py-1 rounded ml-2">C</button>
+                    <button onClick={() => assignGrade(student._id, "F")} className="bg-red-500 text-white px-3 py-1 rounded ml-2">F</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminPage;
